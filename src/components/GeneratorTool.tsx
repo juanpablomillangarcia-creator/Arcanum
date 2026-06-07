@@ -25,7 +25,8 @@ export interface GeneratorConfig<P extends Record<string, string>, R> {
   generateAI?: (p: P) => Promise<R>;
   /** Label for save buttons / saved list entries. */
   resultLabel: (r: R) => string;
-  renderResult: (r: R) => ReactNode;
+  /** `update` lets interactive results mutate and re-render (e.g. expanding a room). */
+  renderResult: (r: R, update: (next: R) => void) => ReactNode;
   /** Store hook created once per tool via makeSavedStore. */
   useSavedStore: UseBoundStore<StoreApi<SavedItemsStore<R>>>;
   generateLabel?: string;
@@ -128,7 +129,7 @@ export function GeneratorTool<P extends Record<string, string>, R>({ config }: {
                   Guardar
                 </button>
               </div>
-              {config.renderResult(result)}
+              {config.renderResult(result, setResult)}
             </div>
           ) : (
             <div className="card text-ink-soft text-center">

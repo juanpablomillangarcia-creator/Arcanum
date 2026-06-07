@@ -126,4 +126,84 @@ const BASE: OracleData = `;
   write("oracle.ts", header, body);
 }
 
+// ---- LOOT tables → loot-tables.ts ----
+{
+  const header = `// Extracted verbatim from arcanum-41.html (loot flavor/item tables). Do not edit by hand.
+export interface MagicItem { name: string; effect: string; }
+
+`;
+  const tiered = (n) => `export const ${n}: Record<number, string[]> = ${extractLiteral(n)};`;
+  const strList = (n) => `export const ${n}: string[] = ${extractLiteral(n)};`;
+  const body = [
+    tiered("LOOT_GEMS"),
+    strList("LOOT_GEM_FLAVORS"),
+    tiered("LOOT_ART"),
+    strList("LOOT_ART_FLAVORS"),
+    `export const LOOT_MUNDANE: Record<string, string[]> = ${extractLiteral("LOOT_MUNDANE")};`,
+    strList("LOOT_TRINKETS"),
+    `export const LOOT_MAGIC: Record<string, MagicItem[]> = ${extractLiteral("LOOT_MAGIC")};`,
+  ].join("\n\n");
+  write("loot-tables.ts", header, body);
+}
+
+// ---- GEN_BANKS (shared fill engine) → gen-banks.ts ----
+{
+  const header = `// Extracted verbatim from arcanum-41.html (GEN_BANKS template-fill banks). Do not edit by hand.
+export const GEN_BANKS: Record<string, string[]> = `;
+  write("gen-banks.ts", header, extractLiteral("GEN_BANKS") + ";");
+}
+
+// ---- Dungeon tables → dungeon-tables.ts ----
+{
+  const header = `// Extracted verbatim from arcanum-41.html (dungeon generation tables). Do not edit by hand.
+`;
+  const obj = (n, t) => `export const ${n}: ${t} = ${extractLiteral(n)};`;
+  const body = [
+    obj("DGN_NAME_PARTS", "{ pre: string[]; de: string[] }"),
+    obj("DGN_PREMISES", "Record<string, string>"),
+    obj("DGN_ATMOS", "Record<string, string[]>"),
+    obj("DGN_ROOM_NAMES", "Record<string, string[]>"),
+    obj("DGN_ROOM_DESCS", "Record<string, string[]>"),
+    obj("DGN_ROOM_DETAIL_FEATURES", "string[]"),
+    obj("DGN_ROOM_DETAIL_DANGERS", "string[]"),
+    obj("DGN_HAZARDS", "string[]"),
+    obj("DGN_REWARDS", "string[]"),
+    obj("DGN_SECRETS", "string[]"),
+    obj("DGN_TYPE_NAMES", "Record<string, string>"),
+    obj("DGN_TAG_NAMES", "Record<string, string>"),
+  ].join("\n\n");
+  write("dungeon-tables.ts", header, body);
+}
+
+// ---- City tables → city-tables.ts ----
+{
+  const header = `// Extracted verbatim from arcanum-41.html (city generation tables). Do not edit by hand.
+export interface DistrictTemplate { name: string; desc: string; }
+export interface BoardTemplate { type: string; text: string; }
+`;
+  const obj = (n, t) => `export const ${n}: ${t} = ${extractLiteral(n)};`;
+  const str = (n) => obj(n, "string[]");
+  const body = [
+    str("CITY_NAME_PREFIXES"), str("CITY_NAME_SUFFIXES"), str("CITY_NAME_CONNECTORS"), str("CITY_NAME_PLACES"),
+    str("CITY_MOTTOS"),
+    obj("CITY_DISTRICT_TEMPLATES", "Record<string, DistrictTemplate>"),
+    str("CITY_TAVERN_NAMES"), str("CITY_TEMPLE_NAMES"), str("CITY_SHOP_NAMES"),
+    str("CITY_GUILDS_BASE"),
+    obj("CITY_GUILDS_BY_TERRAIN", "Record<string, string[]>"),
+    str("CITY_RUMOR_TEMPLATES"),
+    obj("CITY_BOARD_TEMPLATES", "BoardTemplate[]"),
+    str("CITY_CRIMES"), str("CITY_TRABAJOS"), str("CITY_CRIATURAS_TABLON"), str("CITY_MATERIALES"),
+    obj("CITY_NPC_ROLES_BY_GOVERNMENT", "Record<string, string[]>"),
+    obj("CITY_POPULATION", "Record<string, [number, number]>"),
+    obj("CITY_DISTRICT_COUNT", "Record<string, number>"),
+    str("CITY_DEITIES"), str("CITY_SHADOW_FACTIONS"), str("CITY_CURRENT_EVENTS"), str("CITY_FOUNDINGS"),
+    // expansion pools
+    str("GUILD_LEADER_TITLES"), str("GUILD_LEADER_TRAITS"), str("GUILD_SEDES"), str("GUILD_SERVICES_POOL"),
+    str("GUILD_FEES"), str("GUILD_SECRETS"), str("GUILD_QUESTS"), str("GUILD_RIVALRIES"),
+    str("QUEST_PATRONS"), str("QUEST_CONTEXTS"), str("QUEST_COMPLICATIONS"), str("QUEST_REWARDS"), str("QUEST_TWISTS"),
+    str("DISTRICT_STREETS"), str("DISTRICT_LANDMARKS"), str("DISTRICT_LOCALS"), str("DISTRICT_DANGERS"), str("DISTRICT_ATMOS"),
+  ].join("\n\n");
+  write("city-tables.ts", header, body);
+}
+
 console.log("Done.");
