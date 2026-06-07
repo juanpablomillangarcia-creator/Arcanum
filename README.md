@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ARCANUM
 
-## Getting Started
+Caja de herramientas en español para dirigir y jugar **Dungeons & Dragons 5e**, pensada
+para usarse en la mesa desde el móvil. Es el port del prototipo monolítico
+`arcanum-41.html` a una webapp **Next.js + Tailwind**, mobile-first y desplegable en Vercel.
 
-First, run the development server:
+## Estado del port
+
+Reconstrucción incremental: se preserva la funcionalidad y la identidad visual del
+original, pero sobre abstracciones compartidas (un motor de generadores, un sistema de
+tokens de diseño, un patrón único de persistencia) en lugar de copiar las ~36 000 líneas.
+
+**Listo y verificado** (`npm run build` / `lint` / `tsc` limpios):
+
+- Sistema de diseño (Grimorio Oscuro), atmósfera, tipografías.
+- Shell responsive: barra lateral en escritorio, cajón + barra inferior en móvil.
+- **Cámara de los Dados** (con Dados del Caos), **El Oráculo**, **Mesa de Combate**.
+- **Generador de NPCs** (procedural + IA) sobre el motor de generadores reutilizable.
+- Capa de IA: proxy en `app/api/claude` (tu clave nunca llega al bundle) + ajustes.
+
+**Pendiente** (rutas navegables con marcador "en construcción"): Cofre del Tesoro,
+Atlas de Lugares, Cartógrafo de Ciudades, Balanza del Combate, Cinceladora de Hechizos,
+Taller de Reliquias (todos = configuración del motor); Compendio y Bestiario; Forja de
+Personajes; Tejedor de Campañas.
+
+## Desarrollo
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # build de producción
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Datos del SRD
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+El contenido estático (SRD, tablas del caos, oráculo, NPCs…) se extrae **verbatim** del
+HTML original a `src/data/*.ts`:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+node scripts/extract-data.mjs
+```
 
-## Learn More
+### IA (opcional)
 
-To learn more about Next.js, take a look at the following resources:
+Los generadores con IA usan tu propia clave de Anthropic, que se introduce en
+**Ajustes** y se guarda solo en tu dispositivo. Las llamadas pasan por
+`app/api/claude/route.ts` para no exponer la clave en el cliente.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Arquitectura
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `app/` — rutas (una por herramienta) + layout/shell + ruta de API.
+- `src/data/` — contenido extraído y registro de herramientas.
+- `src/lib/` — motores puros (dados, oráculo, NPC, IA).
+- `src/store/` — estado con Zustand + `persist` (mismas claves `arcanum.<tool>.v1`).
+- `src/components/` — shell, motor de generadores y piezas compartidas.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`arcanum-41.html` permanece en el repo como referencia de comportamiento.
