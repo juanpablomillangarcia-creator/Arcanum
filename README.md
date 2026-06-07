@@ -14,14 +14,14 @@ tokens de diseño, un patrón único de persistencia) en lugar de copiar las ~36
 
 - Sistema de diseño (Grimorio Oscuro), atmósfera, tipografías.
 - Shell responsive: barra lateral en escritorio, cajón + barra inferior en móvil.
-- **Cámara de los Dados** (con Dados del Caos), **El Oráculo**, **Mesa de Combate**.
-- **Generador de NPCs** (procedural + IA) sobre el motor de generadores reutilizable.
 - Capa de IA: proxy en `app/api/claude` (tu clave nunca llega al bundle) + ajustes.
 
-**Pendiente** (rutas navegables con marcador "en construcción"): Cofre del Tesoro,
-Atlas de Lugares, Cartógrafo de Ciudades, Balanza del Combate, Cinceladora de Hechizos,
-Taller de Reliquias (todos = configuración del motor); Compendio y Bestiario; Forja de
-Personajes; Tejedor de Campañas.
+**Todas las herramientas completas:**
+
+- **En la mesa:** Cámara de los Dados (con Dados del Caos), El Oráculo, Mesa de Combate.
+- **Preparar:** Tejedor de Campañas (diario, fichas, tramas, guía IA), Balanza del Combate (DMG + IA), Atlas de Lugares.
+- **Generadores:** Forja de Personajes (paso a paso + IA), Generador de NPCs, Cartógrafo de Ciudades, Cofre del Tesoro, Cinceladora de Hechizos, Taller de Reliquias.
+- **Biblioteca:** Compendio (SRD buscable + homebrew), Bestiario (stat blocks + generador procedural + IA).
 
 ## Desarrollo
 

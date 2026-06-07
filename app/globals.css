@@ -114,6 +114,20 @@ body {
   position: relative;
 }
 
+/* Scrollbars a juego con el tema (port de arcanum-41.html:7159) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-bright) var(--bg-deep);
+}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb {
+  background: var(--line-bright);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--gold-deep); }
+::-webkit-scrollbar-corner { background: var(--bg-deep); }
+
 /* Fondo atmosférico global */
 body::before {
   content: "";
