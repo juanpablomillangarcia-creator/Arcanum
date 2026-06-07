@@ -206,4 +206,69 @@ export interface BoardTemplate { type: string; text: string; }
   write("city-tables.ts", header, body);
 }
 
+// ---- SPELLFORGE tables → spellforge-tables.ts ----
+{
+  const names = [
+    "SF_RAND", "SF_DMG_BY_LEVEL", "SF_HEAL_BY_LEVEL", "SF_TEMPHP_BY_LEVEL",
+    "SF_EFFECTS", "SF_RIDERS"
+  ];
+  const header = `// Extracted verbatim from arcanum-41.html (spellforge generation tables). Do not edit by hand.
+export interface SFRandData {
+  schools: string[];
+  classesBySchool: Record<string, string[]>;
+  dmgTypes: Record<string, string[]>;
+  names: { pre: string[]; de: string[] };
+}
+export interface SFEffects {
+  [school: string]: {
+    truco?: string[];
+    bajo?: string[];
+    medio?: string[];
+    alto?: string[];
+  };
+}
+`;
+  const body = names
+    .map((n) => {
+      const lit = extractLiteral(n);
+      let type = "";
+      if (n === "SF_RAND") type = ": SFRandData";
+      else if (n === "SF_EFFECTS") type = ": SFEffects";
+      else if (n === "SF_RIDERS") type = ": Record<string, string[]>";
+      else type = ": Record<number, string>";
+      return `export const ${n}${type} = ${lit};`;
+    })
+    .join("\n\n");
+  write("spellforge-tables.ts", header, body);
+}
+
+// ---- RELIC tables → relic-tables.ts ----
+{
+  const names = ["RL_RARITY_NAMES", "RL_RAND"];
+  const header = `// Extracted verbatim from arcanum-41.html (relic generation tables). Do not edit by hand.
+export interface RLRandData {
+  types: string[];
+  rarities: string[];
+  namePre: Record<string, string[]>;
+  nameDe: string[];
+  effectsByType: Record<string, string[]>;
+  potions: string[];
+  wonders: string[];
+  subtle: string[];
+  dmgTypes: string[];
+  curses: string[];
+}
+`;
+  const body = names
+    .map((n) => {
+      const lit = extractLiteral(n);
+      let type = "";
+      if (n === "RL_RARITY_NAMES") type = ": Record<string, string>";
+      else if (n === "RL_RAND") type = ": RLRandData";
+      return `export const ${n}${type} = ${lit};`;
+    })
+    .join("\n\n");
+  write("relic-tables.ts", header, body);
+}
+
 console.log("Done.");
